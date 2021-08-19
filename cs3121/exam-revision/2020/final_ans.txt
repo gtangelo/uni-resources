@@ -1,0 +1,246 @@
+
+
+
+
+
+
+
+1.
+Ans:
+(a)
+Because A * A = B, the degree of A is the half of the degree of B. Assume the degree of A is q which could
+be represented in such form a+bx+cx^2+...+mx^q. Therefore, the length of A would be q + 1 = a and the length
+of B would be 2q + 1 = b. 
+
+Because A * A = B, 2 * degreeA = degreeB
+Therefore, a = (b+1)/2
+(b)
+Assume, A * A = B = <4,4,-3,-2,1>. The length of B would be b=5. According to the equation from (a), the length of
+sequence A, a would be a = (b+1)/2 = 3.
+Therefore, A could be represented in such polynomial equation A = (a+bx+cx^2) where a, b, c is the coefficient of polynomial
+Therefore, A^2 = a^2 + 2abx + (2ac+b^2)x^2 + 2bcx^3 + c^2x^4
+Because A * A = <4,4,-3,-2,1>, <a^2, 2ab, (2ac+b^2), 2bc, c^2> = <4,4,-3,-2,1>
+We obtain following equation:
+a^2 = 4, 2ab = 4 ,2ac + b^2 = -3 ,2bc = -2 ,c^2 = 1
+Solving the equation we can have
+1. a = 2, b = 1, c = -1
+2. a = -2, b = -1, c = 1
+Finally, we could have two possible sequence A_1, A_2 for A
+A_1 = 2 + x - x^2 <2,1,-1>
+A_2 = -2 - x + x^2 <-2,-1,1>
+
+2.
+Ans:
+This question could be done by greedy method. 
+Algorithm:
+1. For every assignment a(i) which belong to set (a(1)...a(n)), calculate p(i)/t(i).
+Because for every assignment we just need to calculate once. Therefore, this could be done in O(n)
+2. Sort the list of result p(1)/t(1)...p(i)/t(i) is descending order by using merge sort which run in
+O(nlogn)
+3. Based on this order, we always choose the assignment with largest p(i)/t(i)
+It could be examined that this algorithm would run in O(nlogn)
+
+Prove:
+Assume we have two assignment a(i) and a(j) associated with their p(i), p(j) and t(i), t(j) respectively where i < j and a(i), a(j) are
+in a list of sorted array based on the descending order of p/t.
+Now, swap the a(i) and a(j) to examined what would happend
+
+1. choose a(i) to be the first
+The total penalty P_1 would be P_1 = p(i)t(i) + p(j)t(i) + p(j)t(j)
+2. choose a(j) to be the first 
+The total penalty P_2 would be P_2 = p(j)t(j) + p(i)t(j) + p(i)t(i)
+
+If we want P_2 < p_1, then p(j)/t(j) must greater than p(i)/t(i). This result implies that if we choose an
+assignment a(j) with correspondingly large value of p/t, the penalty we gain is always less than when we choose
+a assignment a(i) with correspondingly smaller value of p/t. Therefore, the algorithm above should have the minium
+total number point loss.
+
+
+3.
+Ans:
+(a)
+The subproblem would be "what is the minium total travel time when we reach city c(i)?"
+
+For every 1<=i<=n, define the sub problem T(i,a) to be "what is the minium total travel time when we are reach city c(i) and taking
+animal a?" where i is the index of city and a belong to set (C,H,M,D) and a have not swapped yet.
+
+(b)
+Let t(i,a) be the time cost of traveling from c(i-1) to c(i) by taking animal a.
+t(i,a) = d(i)/v(a) where d(i) is the distance between c(i-1) and c(i) and v(a) would be the speed of animal.
+
+Therefore, the minium travel time when we reach c(i) by taking animal a could be represented by following four situation.
+T(i,C) = min(T(i-1,a)) + t(i,C) where a belongs to the set satisfy R(i-1,a,C) = 1 and 1 <= i <= n
+T(i,H) = min(T(i-1,a)) + t(i,H) where a belongs to the set satisfy R(i-1,a,H) = 1 and 1 <= i <= n
+T(i,M) = min(T(i-1,a)) + t(i,M) where a belongs to the set satisfy R(i-1,a,M) = 1 and 1 <= i <= n
+T(i,D) = min(T(i-1,a)) + t(i,D) where a belongs to the set satisfy R(i-1,a,D) = 1 and 1 <= i <= n
+
+Defining, T(0,a) = 0 (we already reach c(0)) and R(0,a,b)=0 (we allow to choose a initial animal)
+
+Therefore, the minium travel time cost from c(0) to c(n) would be
+optimal_sol = min(T(n,C),T(n,H),T(n,M),T(n,D))
+(c)
+The origin problem is to obtain the minium travel time from c(0) to c(n). We redefine the origin problem to 4 sub problems (the top of the recursion)
+that is "obtaining the minium travel time when we reach c(n) and take animal a". It means that we set a "restriction"
+on the top of recursion. For instance, if we are talking animal C when we reach city n, the animal from previous city should satisfy
+some conditions base on the current animal that we are taking.
+Each subproblem 
+
+Then, the same subproblem could be solve recursively then we could obtain the result of the 4 origin sub problems that we have defined.
+They are T(n,C),T(n,H),T(n,M),T(n,D). We then merge the four sub problem to obtain the global optimal solution which is the minium travel
+time from c(0) to c(n). 
+(d)
+Filling a n*4 table using the algorithm from (b) to find the optimal solution min(T(n,C),T(n,H),T(n,M),T(n,D)). The table have
+four entry and each would be solve in O(1). Thus, the algorithm would run in O(n)
+
+
+
+
+4.
+Ans:
+(a)
+In bipartite graph G = (V,E), the vertexes could be separated to form two groups. For example, L union R = V and all the edge in E
+across L and R. 
+Using Ford-Fulkerson method could find the maximum matching of bipartite graphs. First, we need to construct a flow network. For undirected bipartite graph G=(V,E), a flow network
+G = (V',E') could be construct in following steps.
+1. Placing a source s and sink t which are not belong to set V. V' = (s, t) union V
+2. All the edge in E is the edge of G'.
+3. connected source s to L and connect R to sink t.
+4. The capacity of edge in G' is unit capacity 1.
+In such way, a bipartite graph is transfer to a flow network. A matching in bipartite graph G is correspond to a flow in flow network
+G'.
+Now, using Ford-Fulkerson method to obtain the max flow in flow network G'. A flow which we obtain from Ford-Fulkerson algorithm s->L_i->R_i->t is 
+correspond to a matching Li->R_i in bipartite graph G.
+
+(b)
+This question could be treat as finding the maximum matching in a bipartite graph.
+Firstly, Filling array B with the integer in the range of (2,M). Therefore, array B has M-1 elements.
+For each element A(i) in array A, check if it is divisible by each element in array B which run in O(nM).
+Store the result TRUE/FALSE to a 2-D array table[][].
+
+Then, constructing the bipartite graph in following steps.
+1. Listing the A(1) to A(n) to the left and list the M-1 elements of B to the right.
+2. For every A(i), check the table[][] to determine if there is a integer B(n) in array B which satisfy A(i) is divisible by integer B(n) 
+3. If it satisfy, connect the A(i) to correspond I(i)
+
+Then, constructing the flow network like what question (a) does
+1. Placing the source s and sink t and connect them as need.
+2. Set the capacity to be the unit capacity such that every I(i) could be only matched once.
+
+Then, finding the max flow by applying the Ford-Fulkerson method. If the amount fo max flow is less than N, A(i) can not be assigned to a distinct B(i) as need. Otherwise the algorithm success.
+
+
+
+
+
+
+
+(a)
+In bipartite graph G = (V,E), the vertexes could be separated to form two groups. For example, L union R = V and all the edge in E across L and R. 
+Using Ford-Fulkerson method could find the maximum matching of bipartite graphs. First, we need to construct a flow network. For undirected bipartite graph G=(V,E), a flow network G = (V',E') could be construct in following steps.
+1. Placing a source s and sink t which are not belong to set V. V' = (s, t) union V
+2. All the edge in E is the edge of G'.
+3. connected source s to L and connect R to sink t.
+4. The capacity of edge in G' is unit capacity 1.
+In such way, a bipartite graph is transfer to a flow network. A matching in bipartite graph G is correspond to a flow in flow network G'.
+Now, using Ford-Fulkerson method to obtain the max flow in flow network G'. A flow which we obtain from Ford-Fulkerson algorithm s->L_i->R_i->t is  correspond to a matching Li->R_i in bipartite graph G.
+
+(b)
+This question could be treat as finding the maximum matching in a bipartite graph.
+Firstly, Filling array C with the integer in the range of (2,M). Therefore, array C has M-1 elements. For each element A(i) in array A, check if it is divisible by each element in array C which run in O(nM).
+Store the result TRUE/FALSE to a 2-D array table[][].
+
+Then, constructing the bipartite graph in following steps.
+1. Listing the A(1) to A(n) to the left and list the M-1 elements of C to the right.
+2. For every A(i), check the table[][] to determine if there is a integer C(n) in array C which satisfy A(i) is divisible by integer C(n) 
+3. If it satisfy, connect the A(i) to correspond C(n)
+
+Then, constructing the flow network like what question (a) does
+1. Placing the source s and sink t and connect them following the steps of (a)
+2. Set all the capacity to be the unit capacity 1 such that every C(i) could be only matched once.
+
+Then, finding the max flow by applying the Ford-Fulkerson method. Filling a array B with the correspond value of C(n) of the flow s->A(i)->C(n)->t which we obtain from the max flow algorithm where i = 1...n such that every A(i) is correspond to a B(i). Now, every A(i) is matching with B(i). If the amount for max flow is less than N, A(i) can not be assigned to a distinct B(i) as required. 
+Otherwise the algorithm successfully assign different B(i) to different A(i).
+
+
+
+
+(a)
+For every 1<=i<=n, define the sub problem T(i,a) to be "what is the minimum total travel time when we reach city c(i) and take animal a at that time?" where i is the index of city and a belong to set (C,H,M,D).
+
+(b)
+Let t(i,a) be the time cost of traveling from c(i-1) to c(i) by taking animal a.
+t(i,a) = d(i)/v(a) where d(i) is the distance between c(i-1) and c(i) and v(a) would be the speed of animal.
+
+Therefore, the minimum travel time when we reach c(i) by taking animal a could be represented by following four situation.
+T(i,C) = min(T(i-1,a)) + t(i,C) where a belongs to the set satisfy R(i-1,a,C) = 1 and 1 <= i <= n
+T(i,H) = min(T(i-1,a)) + t(i,H) where a belongs to the set satisfy R(i-1,a,H) = 1 and 1 <= i <= n
+T(i,M) = min(T(i-1,a)) + t(i,M) where a belongs to the set satisfy R(i-1,a,M) = 1 and 1 <= i <= n
+T(i,D) = min(T(i-1,a)) + t(i,D) where a belongs to the set satisfy R(i-1,a,D) = 1 and 1 <= i <= n
+
+Defining, T(0,a) = 0 (we already reach c(0)) and R(0,a,b)=0 (we allow to choose a initial animal)
+
+Therefore, the minimum travel time cost from c(0) to c(n) would be
+optimal_sol = min(T(n,C),T(n,H),T(n,M),T(n,D))
+(c)
+The origin problem is to obtain the minimum travel time from c(0) to c(n). We redefine the origin problem to 4 sub problems (the top of the recursion) that is "obtaining the minimum travel time when we reach c(n) and take animal a". It means that we set a "restriction" on the top of recursion. For instance, if we are talking animal C when we reach city n, the animal from previous city should satisfy
+some conditions base on the current animal that we are taking.
+The optimal solution for each sub problem could be obtain from the optimal solution of the previous sub problem which is "the minimum travel time when we reach the previous city(c(i-1)) with animal a" and then adding the time cost from c(i-1) to c(i) (the current city). 
+Then, the same sub problem could be solve recursively then we could obtain the result of the 4 origin sub problems that we have defined.
+They are T(n,C),T(n,H),T(n,M),T(n,D). We then merge the four sub problem to obtain the global optimal solution which is the minimum travel
+time from c(0) to c(n). 
+(d)
+Filling a n*4 table using the algorithm from (b) to find the optimal solution min(T(n,C),T(n,H),T(n,M),T(n,D)). The table have
+four entry and each would be solve in O(1). Thus, the algorithm would run in O(n)
+
+
+
+
+Ans:
+This question could be done by greedy method. 
+
+Algorithm:
+1. For every assignment a(i) which belong to set (a(1)...a(n)), calculate p(i)/t(i).
+2. Sort the list of result p(1)/t(1)...p(i)/t(i) is descending order by using merge sort which run in O(nlogn) and store the correspond index of assignment into S.
+3. Based on this order, we always choose the assignment with largest p(i)/t(i) (which is basically select the element in S in order).
+
+
+Running time:
+For the first step, because for every assignment we just need to calculate once. Therefore, this could be done in O(n). The time complexity of merge sort is O(nlogn). Therefore, the total time complexity would be O(nlogn).
+
+Prove:
+Assume we have two assignment a(i) and a(j) associated with their p(i), p(j) and t(i), t(j) respectively and define the previous penalty Prev which we have already taken from picking previous assignment.
+Now there are two options that we can perform.
+1. choose a(i) to be the first
+The total penalty P_1 would be P_1 = p(i)t(i) + p(j)t(i) + p(j)t(j) + Prev
+2. choose a(j) to be the first 
+The total penalty P_2 would be P_2 = p(j)t(j) + p(i)t(j) + p(i)t(i) + Prev
+
+If we want P_2 < P_1, then p(j)/t(j) must greater than p(i)/t(i). This result implies that if we choose an assignment a(j) with correspondingly large value of p/t, the penalty we gain is always less than when we choose a assignment a(i) with correspondingly smaller value of p/t. 
+On the other hand, if we want to swap any two adjacent elements in S (which is a sorted array of assignment index based on the descending order of p/t), we would always obtain a larger penalty.
+
+Therefore, the algorithm above should have the minimum total number point loss.
+
+
+
+
+(a)
+Because A * A = B, the degree of A is the half of the degree of B. Assume the degree of A is q which could be represented in such form a+bx+cx^2+...+mx^q. Therefore, the length of A would be q + 1 = a and the length of B would be 
+2q + 1 = b. 
+Therefore, a = (b+1)/2
+
+(b)
+Assume, A * A = B = <4,4,-3,-2,1>. The length of B would be b=5. According to the equation from (a), the length of sequence A, a would be a = (b+1)/2 = 3. Therefore, A could be represented in such polynomial equation A = (a+bx+cx^2) where a, b, c is the coefficient of polynomial. 
+Therefore, A^2 = a^2 + 2abx + (2ac+b^2)x^2 + 2bcx^3 + c^2x^4.
+Because A * A = <4,4,-3,-2,1>, <a^2, 2ab, (2ac+b^2), 2bc, c^2> = <4,4,-3,-2,1>
+
+We obtain following equation:
+a^2 = 4, 
+2ab = 4 ,
+2ac + b^2 = -3 ,
+2bc = -2 ,
+c^2 = 1
+Solving the equation we can have
+1. a = 2, b = 1, c = -1
+2. a = -2, b = -1, c = 1
+Finally, we could have two possible sequence for A
+<2,1,-1>and<-2,-1,1>
